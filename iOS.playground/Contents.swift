@@ -1,30 +1,3 @@
-//栈
-class Stack {
-    var stack: [AnyObject]
-    var isEmpty: Bool {
-        return stack.isEmpty
-    }
-    var peek: AnyObject? {
-        return stack.last
-    }
-    
-    init() {
-        stack = [AnyObject]()
-    }
-    
-    func push(object: AnyObject) {
-        stack.append(object)
-    }
-    
-    func pop() -> AnyObject? {
-        if isEmpty {
-            return nil
-        } else {
-            return stack.removeLast()
-        }
-    }
-}
-
 //给定一个整型数组和一个目标值，返回这个数组中是否有两个值相加等于目标值
 func twoSum(nums: [Int], target: Int) -> Bool {
     var set = Set<Int>()
@@ -128,7 +101,6 @@ func partition(_ head: ListNode?, _ x: Int) -> ListNode? {
             prev = node!
         } else {
             post.next = node
-            print(postDummy.next?.val)
             post = node!
         }
         node = node!.next
@@ -152,4 +124,122 @@ func hasCycle(head: ListNode?) -> Bool {
         }
     }
     return false
+}
+
+//删除链表中倒数第N个节点, n小于链表长度
+func removeNthFromEnd(head: ListNode?, _ n: Int) -> ListNode? {
+    guard let head = head else { return nil }
+    let dummy = ListNode(0)
+    dummy.next = head
+    var prev: ListNode? = dummy
+    var post: ListNode? = dummy
+    
+    for _ in 0 ..< n {
+        if post == nil {
+            break
+        }
+        post = post!.next
+    }
+    
+    while post != nil, post!.next != nil {
+        prev = prev!.next
+        post = post!.next
+    }
+    
+    prev!.next = prev!.next?.next
+    
+    return dummy.next
+}
+
+//栈
+protocol Stack {
+    //持有的元素类型
+    associatedtype Element
+    //栈是否为空
+    var isEmpty: Bool { get }
+    //栈的大小
+    var size: Int { get }
+    //栈顶元素
+    var peek: Element? { get }
+    //入栈
+    mutating func push(_ newElement: Element)
+    //出栈
+    mutating func pop() -> Element?
+}
+
+struct IntegerStack: Stack {
+    typealias Element = Int
+    private var stack = [Element]()
+    
+    var isEmpty: Bool { return stack.isEmpty }
+    var size: Int { return stack.count }
+    var peek: Int? { return stack.last }
+    
+    mutating func push(_ newElement: Int) {
+        stack.append(newElement)
+    }
+    
+    mutating func pop() -> Int? {
+        return stack.popLast()
+    }
+}
+
+//队列
+protocol Queue {
+    //队列元素类型
+    associatedtype Element
+    //是否为空
+    var isEmpty: Bool { get }
+    //队列大小
+    var size: Int { get }
+    //队首元素
+    var peek: Element? { get }
+    //入列
+    mutating func enqueue(_ newElement: Element)
+    //出列
+    mutating func dequeue() -> Element?
+}
+
+struct IntegerQueue: Queue {
+    typealias Element = Int
+    private var left = [Element]()
+    private var right = [Element]()
+    
+    var isEmpty: Bool { return left.isEmpty && right.isEmpty }
+    var size: Int { return left.count + right.count }
+    var peek: Int? { return left.isEmpty ? right.first : left.last }
+    
+    mutating func enqueue(_ newElement: Int) {
+        right.append(newElement)
+    }
+    
+    mutating func dequeue() -> Int? {
+        if left.isEmpty {
+            left = right.reversed()
+            right.removeAll()
+        }
+        return left.popLast()
+    }
+}
+
+//简化路径
+func simplyfyPath(path: String) -> String {
+    var pathStack = [Substring]()
+    let paths = path.split(separator: "/")
+    
+    for path in paths {
+        guard path != "." else {
+            continue
+        }
+        if path == ".." {
+            if pathStack.count > 0 {
+                pathStack.removeLast()
+            }
+        } else if path != "" {
+            pathStack.append(path)
+        }
+    }
+    let res = pathStack.reduce("") { total, dir in "\(total)/\(dir)"}
+    
+    return res.isEmpty ? "/" : res
 }
