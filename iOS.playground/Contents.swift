@@ -243,3 +243,85 @@ func simplyfyPath(path: String) -> String {
     
     return res.isEmpty ? "/" : res
 }
+
+//使用栈实现队列
+class MyQueue {
+    var stackA: IntegerStack
+    var stackB: IntegerStack
+    var isEmpty: Bool { return stackA.isEmpty && stackB.isEmpty }
+    var size: Int { return stackA.size + stackB.size }
+    var peek: Int? {
+        get {
+            shift()
+            return stackB.peek
+        }
+    }
+    
+    init() {
+        stackA = IntegerStack()
+        stackB = IntegerStack()
+    }
+    
+    func enqueue(_ newElement: Int) {
+        stackA.push(newElement)
+    }
+    
+    func dequeue() -> Int? {
+        shift()
+        return stackB.peek
+    }
+    
+    func shift() {
+        if stackB.isEmpty {
+            while !stackA.isEmpty {
+                stackB.push(stackA.pop()!)
+            }
+        }
+    }
+}
+
+//使用队列实现栈
+class MyStack {
+    var queueA: IntegerQueue
+    var queueB: IntegerQueue
+    var isEmpty: Bool {
+        return queueA.isEmpty && queueB.isEmpty
+    }
+    var size: Int {
+        return queueA.size + queueB.size
+    }
+    var peek: Int? {
+        get {
+            shift()
+            let peekObj = queueA.peek
+            queueB.enqueue(queueA.dequeue()!)
+            return peekObj
+        }
+    }
+    
+    init() {
+        queueA = IntegerQueue()
+        queueB = IntegerQueue()
+    }
+    
+    func push(_ newElement: Int) {
+        queueA.enqueue(newElement)
+    }
+    
+    func pop() -> Int? {
+        shift()
+        let pop = queueA.dequeue()
+        swap()
+        return pop
+    }
+    
+    func swap() {
+        (queueA, queueB) = (queueB, queueA)
+    }
+    
+    func shift() {
+        while queueA.size != 1 {
+            queueB.enqueue(queueA.dequeue()!)
+        }
+    }
+}
