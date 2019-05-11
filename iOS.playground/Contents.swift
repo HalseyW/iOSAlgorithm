@@ -268,7 +268,7 @@ class MyQueue {
     
     func dequeue() -> Int? {
         shift()
-        return stackB.peek
+        return stackB.pop()
     }
     
     func shift() {
@@ -324,4 +324,42 @@ class MyStack {
             queueB.enqueue(queueA.dequeue()!)
         }
     }
+}
+
+//二叉树
+public class ThreeNode {
+    public var val: Int
+    public var left: ThreeNode?
+    public var right: ThreeNode?
+    init(_ val: Int) {
+        self.val = val
+    }
+}
+
+//计算二叉树的最大深度
+func maxDepth(root: ThreeNode?) -> Int {
+    guard let root = root else {
+        return 0
+    }
+    return max(maxDepth(root: root.left), maxDepth(root: root.right)) + 1
+}
+
+//判断一棵树为二叉查找树
+func isValidBST(root: ThreeNode?) -> Bool {
+    return _helper(node: root, nil, nil)
+}
+
+func _helper(node: ThreeNode?, _ min: Int?, _ max: Int?) -> Bool {
+    guard let node = node else {
+        return true
+    }
+    //右子节点的值必须大于父节点的值
+    if let min = min, node.val <= min {
+        return false
+    }
+    //左子节点的值必须小于父节点的值
+    if let max = max, node.val >= max {
+        return false
+    }
+    return _helper(node: node.left, min, node.val) && _helper(node: node.right, node.val, max)
 }
