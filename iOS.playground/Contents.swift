@@ -363,3 +363,52 @@ func _helper(node: ThreeNode?, _ min: Int?, _ max: Int?) -> Bool {
     }
     return _helper(node: node.left, min, node.val) && _helper(node: node.right, node.val, max)
 }
+
+//二叉树前序遍历
+func preorderTraversal(root: ThreeNode?) -> [Int] {
+    var res = [Int]()
+    var stack = [ThreeNode]()
+    var node = root
+    
+    while !stack.isEmpty || node != nil {
+        if node != nil {
+            res.append(node!.val)
+            stack.append(node!)
+            node = node!.left
+        } else {
+            node = stack.removeLast().right
+        }
+    }
+    
+    return res
+}
+
+//使用队列实现二叉树层级遍历
+func levelOrder(root: ThreeNode?) -> [[Int]] {
+    var res = [[Int]]()
+    var queue = [ThreeNode]()
+    
+    if let root = root {
+        queue.append(root)
+    }
+    
+    while queue.count > 0 {
+        var level = [Int]()
+        var size = queue.count
+        
+        for _ in 0 ..< size {
+            let node = queue.removeFirst()
+            
+            level.append(node.val)
+            if let left = node.left {
+                queue.append(left)
+            }
+            if let right = node.right {
+                queue.append(right)
+            }
+        }
+        res.append(level)
+    }
+    
+    return res
+}
