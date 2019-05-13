@@ -412,3 +412,99 @@ func levelOrder(root: ThreeNode?) -> [[Int]] {
     
     return res
 }
+
+//归并排序
+func mergeSort(_ array: [Int]) -> [Int] {
+    var helper = Array(repeating: 0, count: array.count), array = array
+    mergeSort(&array, &helper, 0, array.count - 1)
+    return array
+}
+
+func mergeSort(_ array: inout [Int], _ helper: inout [Int], _ low: Int, _ high: Int) {
+    guard low < high else {
+        return
+    }
+    let middle = (high - low) / 2 + low
+    mergeSort(&array, &helper, low, middle)
+    mergeSort(&array, &helper, middle + 1, high)
+    merge(&array, &helper, low, middle, high)
+}
+
+func merge(_ array: inout [Int], _ helper: inout [Int], _ low: Int, _ middle: Int, _ high: Int) {
+    for i in low ... high {
+        helper[i] = array[i]
+    }
+    
+    var helplerLeft = low, helperRight = middle + 1, current = low
+    
+    while helplerLeft <= middle && helperRight <= high {
+        if helper[helplerLeft] <= helper[helperRight] {
+            array[current] = helper[helplerLeft]
+            helplerLeft += 1
+        } else {
+            array[current] = helper[helperRight]
+            helperRight += 1
+        }
+        current += 1
+    }
+    
+    guard middle - helplerLeft >= 0 else {
+        return
+    }
+    for i in 0 ... middle - helplerLeft {
+        array[current + i] = helper[helplerLeft + i]
+    }
+}
+
+//快速排序
+func quickSort(_ array: [Int]) -> [Int] {
+    guard array.count > 1 else {
+        return array
+    }
+    
+    let pivot = array[array.count / 2]
+    let left = array.filter { $0 < pivot }
+    let middle = array.filter { $0 == pivot }
+    let right = array.filter { $0 > pivot }
+    
+    return quickSort(left) + middle + quickSort(right)
+}
+
+//二分搜索
+func binarySerch(_ nums: [Int], _ target: Int) -> Bool {
+    var left = 0, mid = 0, right = nums.count - 1
+    
+    while left <= right {
+        mid = (right - left) / 2 + left
+        if nums[mid] == target {
+            return true
+        } else if nums[mid] < target {
+            left = mid + 1
+        } else {
+            right = mid - 1
+        }
+    }
+    
+    return false
+}
+
+//递归实现二分搜索
+func binarySerchByRecursive(nums: [Int], target: Int) -> Bool {
+    return binarySerchByRecursive(nums: nums, target: target, left: 0, right: nums.count - 1)
+}
+
+func binarySerchByRecursive(nums: [Int], target: Int, left: Int, right: Int) -> Bool {
+    guard left <= right else {
+        return false
+    }
+    
+    let mid = (right - left) / 2 + left
+    
+    if nums[mid] == target {
+        return true
+    } else if nums[mid] < target {
+        return binarySerchByRecursive(nums: nums, target: target, left: mid + 1, right: right)
+    } else {
+        return binarySerchByRecursive(nums: nums, target: target, left: left, right: mid - 1)
+    }
+}
