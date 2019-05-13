@@ -394,7 +394,7 @@ func levelOrder(root: ThreeNode?) -> [[Int]] {
     
     while queue.count > 0 {
         var level = [Int]()
-        var size = queue.count
+        let size = queue.count
         
         for _ in 0 ..< size {
             let node = queue.removeFirst()
