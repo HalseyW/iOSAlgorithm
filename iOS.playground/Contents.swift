@@ -536,8 +536,8 @@ func merge(meetingTimes: [MeetingTime]) -> [MeetingTime] {
     res.append(meetingTimes[0])
     
     for i in 1 ..< meetingTimes.count - 1 {
-        var last = res[res.count - 1]
-        var current = meetingTimes[i]
+        let last = res[res.count - 1]
+        let current = meetingTimes[i]
         if current.start > last.end {
             res.append(current)
         } else {
