@@ -508,3 +508,71 @@ func binarySerchByRecursive(nums: [Int], target: Int, left: Int, right: Int) -> 
         return binarySerchByRecursive(nums: nums, target: target, left: left, right: mid - 1)
     }
 }
+
+//会议时间排序
+public class MeetingTime {
+    public var start: Int
+    public var end: Int
+    init(_ start: Int, _ end: Int) {
+        self.start = start
+        self.end = end
+    }
+}
+
+func merge(meetingTimes: [MeetingTime]) -> [MeetingTime] {
+    guard meetingTimes.count > 1 else {
+        return meetingTimes
+    }
+    
+    var meetingTimes = meetingTimes.sorted {
+        if $0.start != $1.start {
+            return $0.start < $1.start
+        } else {
+            return $0.end < $1.end
+        }
+    }
+    
+    var res = [MeetingTime]()
+    res.append(meetingTimes[0])
+    
+    for i in 1 ..< meetingTimes.count - 1 {
+        var last = res[res.count - 1]
+        var current = meetingTimes[i]
+        if current.start > last.end {
+            res.append(current)
+        } else {
+            last.end = max(last.end, current.end)
+        }
+    }
+    
+    return res
+}
+
+//搜索旋转数组
+func search(nums: [Int], target: Int) -> Int {
+    var (left, mid, right) = (0, 0, nums.count - 1)
+    
+    while left <= right {
+        mid = (right - left) / 2 + left
+        
+        if nums[mid] == target {
+            return mid
+        }
+        
+        if nums[mid] >= nums [left] {
+            if nums[mid] > target && target > nums[left] {
+                right = mid - 1
+            } else {
+                left = mid + 1
+            }
+        } else {
+            if nums[mid] < target && target <= nums[right] {
+                left = mid + 1
+            } else {
+                right = mid - 1
+            }
+        }
+    }
+    
+    return -1
+}
