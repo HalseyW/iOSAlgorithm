@@ -116,7 +116,7 @@ func partition(_ head: ListNode?, _ x: Int) -> ListNode? {
 func hasCycle(head: ListNode?) -> Bool {
     var slow = head
     var fast = head
-    while slow?.next != nil && fast?.next != nil {
+    while fast != nil && fast!.next != nil {
         slow = slow!.next
         fast = fast!.next!.next
         if slow === fast {
@@ -576,3 +576,33 @@ func search(nums: [Int], target: Int) -> Int {
     
     return -1
 }
+
+//斐波拉契数列第50项粗暴解法
+func Fib() -> Int {
+    var (prev, curr) = (0, 1)
+    
+    for _ in 1 ..< 50 {
+        (curr, prev) = (curr + prev, curr)
+    }
+    
+    return curr
+}
+
+//斐波拉契数列动态解法
+var nums = Array(repeating: 0, count: 100)
+func Fib(_ n: Int) -> Int {
+    guard n > 0  else {
+        return 0
+    }
+    if n == 1 || n == 2{
+        return 1
+    }
+    if nums[n - 1] != 0 {
+        return nums[n - 1]
+    }
+    
+    nums[n - 1] = Fib(n - 1) + Fib(n - 2)
+    return nums[n - 1]
+}
+
+print(Fib(50))
